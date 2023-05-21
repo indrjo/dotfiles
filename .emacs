@@ -66,6 +66,6 @@
 ;; cfr: https://www.emacswiki.org/emacs/FillColumnIndicator
 (add-to-list 'load-path "~/.emacs.d/custom")
 (require 'fill-column-indicator)
-(setq fci-rule-use-dashes 75)
+(setq fci-rule-column 75)
 (add-hook 'prog-mode-hook #'fci-mode)
 
