@@ -2,11 +2,11 @@
 ;; Get rid of the standard Emacs initial screen
 (setq inhibit-startup-message t)
 
-(scroll-bar-mode -1)   ; Disable visible scrollbar
+;(scroll-bar-mode -1)   ; Disable visible scrollbar
 (tool-bar-mode -1)     ; Disable the toolbar
 (tooltip-mode -1)      ; Disable tooltips
 (set-fringe-mode 0)    ; Give some breathing room
-(menu-bar-mode -1)     ; Disable the menu bar
+;(menu-bar-mode -1)     ; Disable the menu bar
 
 ;; Initialize package sources
 (require 'package)
@@ -59,8 +59,13 @@
                 (shell-command-to-string "agda-mode locate")))
 
 ;; Theme
-(use-package darcula-theme
-  :ensure t
-  :config)
-
+(use-package darcula-theme :ensure t)
 (load-theme 'darcula t)
+
+;; Vertical ruler
+;; cfr: https://www.emacswiki.org/emacs/FillColumnIndicator
+(add-to-list 'load-path "~/.emacs.d/custom")
+(require 'fill-column-indicator)
+(setq fci-rule-use-dashes 75)
+(add-hook 'prog-mode-hook #'fci-mode)
+
