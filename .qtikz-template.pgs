@@ -1,0 +1,16 @@
+\documentclass{standalone}
+\usepackage[no-math]{fontspec}
+\usepackage[tt=false,rm]{libertine}
+\usepackage{libertinust1math,MnSymbol}
+\usepackage{tikz}
+\usetikzlibrary{calc,babel,arrows.meta,cd}
+\tikzcdset{
+          , arrow style=tikz
+          , diagrams={>={To[length=3.4pt,width=3.4pt]}}
+          , shorten=-2pt
+          , natural/.style={shorten=2pt, Rightarrow}
+          }
+          
+\begin{document}
+<>
+\end{document}
