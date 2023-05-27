@@ -1,8 +1,14 @@
 
+;; Show the current column number too.
+(setq column-number-mode t)
+
+;; TABs must be converted into consecutive spaces!
+(setq-default indent-tabs-mode nil)
+
 ;; Uncluttering my workspace a little bit...
-(tool-bar-mode -1)     ; no toolbar
-(tooltip-mode -1)      ; no tooltips
-(set-fringe-mode 0)    ; get rid of fringes
+(tool-bar-mode -1)  ; no toolbar
+(tooltip-mode -1)   ; no tooltips
+(set-fringe-mode 0) ; get rid of fringes
 
 ;; Add packages archives, since it appears to be empty by deafault.
 (require 'package)
@@ -77,6 +83,18 @@
        (concat custom-dir "fill-column-indicator.el"))
   (require 'fill-column-indicator)
   (setq fci-rule-column 75)
-  (add-hook 'prog-mode-hook #'fci-mode))
+  ;; The vertical rule is only for the languages I specifiy below...
+  (add-hook 'haskell-mode-hook #'fci-mode)
+  (add-hook 'scheme-mode-hook #'fci-mode)
+  (add-hook 'emacs-lisp-mode-hook #'fci-mode)
+  (add-hook 'sh-mode-hook #'fci-mode)
+  (add-hook 'perl-mode-hook #'fci-mode)
+  (add-hook 'python-mode-hook #'fci-mode))
+
+;; TAB is 2 spaces for sh scripts
+(setq-default sh-basic-offset 2)
+
+;; Spellcheck for all the programming languages
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
 ;; @@@
