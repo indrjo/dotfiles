@@ -1,21 +1,27 @@
+;; Sources that made possible this configuration file:
+;;
+;; >>> https://github.com/daviwil/emacs-from-scratch
+;; >>> https://www.youtube.com/watch?v=74zOY-vgkyw
 
 ;; Show the current column number too.
 (setq column-number-mode t)
 
-;; TABs must be converted into consecutive spaces!
+;; Insert spaces when you hit tab.
 (setq-default indent-tabs-mode nil)
 
 ;; Uncluttering my workspace a little bit...
-(tool-bar-mode -1)  ; no toolbar
-(tooltip-mode -1)   ; no tooltips
-(set-fringe-mode 0) ; get rid of fringes
+;(setq inhibit-startup-message t)
+(tool-bar-mode -1)
+(tooltip-mode -1)
+(set-fringe-mode 10)
 
-;; Add packages archives, since it appears to be empty by deafault.
+;; Add packages archives, since it appears to be empty by default.
 (require 'package)
 (setq package-archives
-      '(("melpa" . "https://melpa.org/packages/")
-        ("org" . "https://orgmode.org/elpa/")
-        ("elpa" . "https://elpa.gnu.org/packages/")))
+      '(("elpa"   . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ("melpa"  . "https://melpa.org/packages/")
+        ("org"    . "https://orgmode.org/elpa/")))
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
@@ -31,7 +37,7 @@
 (use-package command-log-mode)
 
 ;; This package assists you in narrowing and picking the right string from
-;; a vast number of choices in certain buffers.
+;; a vast number of choices in certain buffers. Stolen.
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
@@ -50,19 +56,26 @@
   :config
   (ivy-mode 1))
 
-;; A library to make sure the the environment variables inside GNU Emacs
-;; are the same of your shell. For future reference see:
+;; A library to make sure the environment variables inside GNU Emacs are
+;; the same of your shell. For future reference see:
 ;; >>> https://github.com/purcell/exec-path-from-shell#usage
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
-;; Haskell syntax highlight
+;; Haskell
 (use-package haskell-mode)
 
 ;; Agda
 (load-file (let ((coding-system-for-read 'utf-8))
    (shell-command-to-string "agda-mode locate")))
+
+;; TeX
+(use-package tex
+  :ensure auctex)
+
+;; Git
+(use-package magit)
 
 ;; The selected theme.
 (use-package darcula-theme
@@ -98,3 +111,16 @@
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
 ;; @@@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(auctex-cluttex magit auctex-lua auctex-latexmk auctex zenburn-theme use-package jetbrains-darcula-theme ivy haskell-mode flatland-theme exec-path-from-shell darcula-theme compat command-log-mode)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
