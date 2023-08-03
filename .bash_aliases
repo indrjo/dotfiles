@@ -120,10 +120,9 @@ export PATH=~/gems/bin:$PATH
 #
 #  ! LaTeX Error: File `FILENAME' not found.
 #
-# Interrogate CTAN for packages containing that file and install them.
-tlmgr-search-list () {
-  tlmgr search --global --file "/$1" | \
-    grep -P ':\s*$' | sed 's!\s*:$!!'
+# Interrogate CTAN for packages containing that file.
+tlmgr-search-packages () {
+  tlmgr search --global --file "/$1" | grep -P ':$' | sed 's!:$!!'
 }
 
 # *******************
