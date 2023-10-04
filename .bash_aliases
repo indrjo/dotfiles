@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -o pipefail
+
 # **********
 # * SYSTEM *
 # **********
@@ -56,7 +58,9 @@ pw-gen () {
 # ***********
 
 # Set the environment for Haskell. Remember to modify a bit ~/.ghcup/env if
-# it is the first time you have installed ghcup.
+# it is the first time you have installed ghcup. 
+# !!! For the very first time, you have to change the order paths are piled
+# !!! into PATH in ~/.ghcup/env.
 [ -f ~/.ghcup/env ] && source ~/.ghcup/env
 
 # Make ghci warn you even for the slightest thing. 
@@ -69,9 +73,9 @@ alias ghcup='TMPDIR=~/.tmp ghcup'
 # * RACKET *
 # **********
 
-# Make visible the binaries of racket. This is in case you have installed
-# Racket in your home, as the installer of Racket does by default. If you
-# have installed Racket from the Arch repos, then no need for that.
+# The line below is in case you have installed Racket in your home, as the
+# installer of Racket does by default. If you have got Racket from the Arch
+# Linux repos, then no need for such small correction.
 [ -d ~/racket/bin ] && export PATH=~/racket/bin:$PATH
 
 # **********
@@ -84,7 +88,7 @@ alias py='python3'
 # * PERL *
 # ********
 
-# Add Perl directories to $PATH.
+# Your local Perl.
 PATH="/home/indrjo/perl5/bin${PATH:+:${PATH}}"
 export PATH
 PERL5LIB="/home/indrjo/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
@@ -102,7 +106,6 @@ alias pl='perl'
 # * RUBY *
 # ********
 
-# Add Ruby paths.
 export GEM_HOME=~/gems
 export PATH=~/.gem/ruby/3.0.0/bin:$PATH
 export PATH=~/.local/share/gem/ruby/3.0.0/bin:$PATH
@@ -116,13 +119,15 @@ export PATH=~/gems/bin:$PATH
 # installing TeX Live I use.
 [ -f ~/.tlrc ] && source ~/.tlrc
 
-# This function accepts a filename, the one of the warning
-#
-#  ! LaTeX Error: File `FILENAME' not found.
-#
-# Interrogate CTAN for packages containing that file.
-tlmgr-search-packages () {
-  tlmgr search --global --file "/$1" | grep -P ':$' | sed 's!:$!!'
+# Interrogate CTAN for packages containing a given file.
+tlmgr_search () {
+  tlmgr search --global --file "/$1" \
+    | perl -lne "/([^:]+):$/ && print \$1"
+}
+
+# Install ALL the packages listed by `tlmgr_search`.
+tlmgr_search_install () {
+  tlmgr_search "$1" | xargs tlmgr install
 }
 
 # *******************
@@ -134,18 +139,6 @@ alias yt='yt-dlp -N 2 -o "%(title)s.%(ext)s"'
 # *******
 # * GIT *
 # *******
-
-# Just avoid the function below.
-#git-zero () {
-#  git checkout --orphan temp-branch
-#  git add --all
-#  now=$(date +"%H:%M | %d %b %Y")
-#  git commit -am "reborn: $now"
-#  git branch -D main
-#  git branch -m main
-#  #wget -q --spider "https://github.com"
-#  #[ $? == 0 ] && git push -uf origin main
-#}
 
 # Within a git repo read .gitignore and delete all the corresponding stuff
 # inside the same tree. Observe that you should run this command from the
