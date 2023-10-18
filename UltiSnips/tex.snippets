@@ -1,0 +1,52 @@
+
+# https://www.ejmastnak.com/tutorials/vim-latex/ultisnips/
+
+extends tex
+
+snippet beg "begin{}/end{}" bA
+\begin{$1}
+$2
+\end{$1}
+$0
+endsnippet
+
+snippet cd "tikz-cd" bA
+\begin{tikzcd}
+$1
+\begin{tikzcd}
+$0
+endsnippet
+
+snippet mk "inline math" wA
+\($1\)$0
+endsnippet
+
+snippet dm "display math" wA
+\[
+  $1
+\]
+$0
+endsnippet
+
+snippet fr "fraction" iA
+\\frac{$1}{$2}$0
+endsnippet
+
+snippet fig "include figures" bA
+\begin{figure}
+\centering
+\includegraphics[height=.25\textwidth]{$1}
+\caption{$2}
+\label{figure:$3}
+\end{figure}
+$0
+endsnippet
+
+snippet ref "description" iA
+~\ref{$1:$2}$0
+endsnippet
+
+snippet eqref "description" iA
+~\eqref{$1:$2}$0
+endsnippet
+
