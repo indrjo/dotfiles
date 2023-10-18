@@ -1,6 +1,14 @@
 
+" Source that made possible the current configuration:
+"
+" * https://stackoverflow.com/q/164847
+"
+
 " Disable compatibility with vi which can cause unexpected issues.
 set nocompatible
+
+" `cd` into the directory containing the file you are working on
+set autochdir
 
 " Enable type file detection.
 filetype on
@@ -24,12 +32,13 @@ set cursorline
 "set cursorcolumn
 
 " Indentation
-filetype indent on
+filetype plugin indent on
 set autoindent    " inherit indentation from the previous line
 set expandtab     " convert tabs into consecutive spaces
-set tabstop=2     " one tab is equal to 2 consecutive spaces
+set smarttab      " in combination with expandtab
+set shiftwidth=2  " when shifting, indent use 2 spaces
 set softtabstop=2 " the same for soft tabs
-set shiftwidth=2  " when shifting, indent using 2 spaces
+
 
 " How many columns per line.
 set textwidth=75
@@ -42,7 +51,7 @@ set nobackup
 set scrolloff=10
 
 " Do not wrap lines. Allow long lines to extend as far as the line goes.
-set nowrap
+"set nowrap
 
 " While searching though a file, highlight matching characters as you type.
 set incsearch
@@ -82,14 +91,6 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 " Use mouse/touchpad too.
 set mouse=a
 
-" Set the background color. Available values: dark and light.
-set background=dark
-" Set contrast. Available values: 'hard', 'medium'(default), 'soft'
-"let g:everforest_background = 'soft'
-" For better performance
-let g:everforest_better_performance = 1
-colorscheme everforest
-
 " Plugins for vim.
 call plug#begin('~/.vim/plugged')
 
@@ -122,5 +123,22 @@ let g:UltiSnipsSnippetDirectories=['~/.vim/UltiSnips']
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 
+" Markdown
+Plug 'preservim/vim-markdown'
+let g:vim_markdown_folding_disabled = 1
+
+" Vim's colorscheme
+"Plug 'sainnhe/everforest'
+Plug 'sainnhe/gruvbox-material'
+"Plug 'doums/darcula'
+
+" Some airline for Vim
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+let g:airline_theme='base16_gruvbox_dark_hard'
+
 call plug#end()
+
+set background=dark
+colorscheme gruvbox-material
 
