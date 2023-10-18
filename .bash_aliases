@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 set -o pipefail
 
@@ -6,13 +6,13 @@ set -o pipefail
 # * SYSTEM *
 # **********
 
-# Getting rid of useless garbage.
+# Getting rid of useless garbage, using pacman.
 alias clean='pacman -Qtdq | sudo pacman -Rnsu -'
 
-# The same as above, just in case yay is installed.
+# The same as above, but using yay instead.
 alias yay-clean='yay -Qtdq | yay -Rnsu -'
 
-# Regenerating the file grub.cfg. It is just a shorthand.
+# Regenerating the file grub.cfg.
 regen-grub-cfg () {
   sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
@@ -29,21 +29,17 @@ update-arch-mirrors () {
     --save /etc/pacman.d/mirrorlist
 }
 
-# Make sure there exists the directory .tmp in your home. This place has no
-# particular reason to be. It is just a space where to cram stuff that will
-# be removed in a shot time.
+# Make sure there exists the directory ~/.tmp in your home. It is a space
+# where to cram stuff that will be removed in a shot time.
 [ -d ~/.tmp ] || mkdir -p ~/.tmp
 
-# Make sure there is the directory where local bins are stored and push it
-# to $PATH. Many GNU/Linux distros have that directory in their path and it
-# would be nice to have. For example, pip installs stuff there and if it is
-# not in $PATH, it will recommend you to insert it.
+# Make sure there is the directory where local binaries are stored and push
+# it to $PATH. Many GNU/Linux distros have that directory in their path and
+# it would be nice to have here.
 [ -d ~/.local/bin ] || mkdir -p ~/.local/bin
-export PATH=~/.local/bin:$PATH
+(echo "$PATH" | grep -q ~/.local/bin) || export PATH=~/.local/bin:$PATH
 
 # Generate passwords. If no argument is given, the length is by default 12.
-# It seems to me a nice default which will do most of the times. Of course,
-# longer passwords are safer, but some websites accept up to 8 characters.
 pw-gen () {
   [ -z $1 ] && len=12 || len=$1
   # Reminder: -c capital letters
@@ -57,8 +53,7 @@ pw-gen () {
 # * HASKELL *
 # ***********
 
-# Set the environment for Haskell. Remember to modify a bit ~/.ghcup/env if
-# it is the first time you have installed ghcup. 
+# Set the environment for Haskell. Remember to modify a bit ~/.ghcup/env.
 # !!! For the very first time, you have to change the order paths are piled
 # !!! into PATH in ~/.ghcup/env.
 [ -f ~/.ghcup/env ] && source ~/.ghcup/env
@@ -89,15 +84,15 @@ alias py='python3'
 # ********
 
 # Your local Perl.
-PATH="/home/indrjo/perl5/bin${PATH:+:${PATH}}"
+PATH="$HOME/perl5/bin${PATH:+:${PATH}}"
 export PATH
-PERL5LIB="/home/indrjo/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
+PERL5LIB="$HOME/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"
 export PERL5LIB
-PERL_LOCAL_LIB_ROOT="/home/indrjo/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
+PERL_LOCAL_LIB_ROOT="$HOME/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"
 export PERL_LOCAL_LIB_ROOT
-PERL_MB_OPT="--install_base \"/home/indrjo/perl5\""
+PERL_MB_OPT="--install_base \"$HOME/perl5\""
 export PERL_MB_OPT
-PERL_MM_OPT="INSTALL_BASE=/home/indrjo/perl5"
+PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
 export PERL_MM_OPT
 
 alias pl='perl'
@@ -135,17 +130,31 @@ tlmgr_search_install () {
 # *******************
 
 alias yt='yt-dlp -N 2 -o "%(title)s.%(ext)s"'
+alias smallest-yt='yt -S "+size,+br"'
 
 # *******
 # * GIT *
 # *******
 
+# Just avoid the function below.
+git-zero () {
+  git checkout --orphan temp-branch
+  git add --all
+  now=$(date +"%H:%M | %d %b %Y")
+  git commit -am "reborn: $now"
+  git branch -D main
+  git branch -m main
+  wget -q --spider "https://github.com"
+  [ $? == 0 ] && git push -uf origin main
+}
+
 # Within a git repo read .gitignore and delete all the corresponding stuff
 # inside the same tree. Observe that you should run this command from the
 # base of your repository.
 clean-git-repo () {
-  grep -vP '^\s*(#|$)' .gitignore | \
-    xargs -I % find . -not -path './.git/*' -type f -name % -delete
+  #grep -vP '^\s*(#|$)' .gitignore | \
+  #  xargs -I % find . -not -path './.git/*' -type f -name % -delete
+  grep -vP '^\s*(#|$)' .gitignore | xargs -I % sh -c 'rm -frv %'
 }
 
 # *******
