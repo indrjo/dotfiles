@@ -7,19 +7,19 @@
 " Disable compatibility with vi which can cause unexpected issues.
 set nocompatible
 
-" `cd` into the directory containing the file you are working on
+" `cd` into the directory containing the file you are working on.
 set autochdir
 
 " Enable type file detection.
 filetype on
 
-" Enable plugins and load plugin for the detected file type.
+" Load plugins for the detected file type.
 filetype plugin on
 
 " Turn syntax highlighting on.
 syntax on
 
-" Disable bips
+" Disable bips. It is annoying.
 set noerrorbells
 
 " Add numbers to each line on the left-hand side.
@@ -31,13 +31,13 @@ set cursorline
 " Highlight cursor line underneath the cursor vertically.
 "set cursorcolumn
 
-" Indentation
+" Indentation.
 filetype plugin indent on
-set autoindent    " inherit indentation from the previous line
-set expandtab     " convert tabs into consecutive spaces
-set smarttab      " in combination with expandtab
-set shiftwidth=2  " when shifting, indent use 2 spaces
-set softtabstop=2 " the same for soft tabs
+set autoindent
+set expandtab
+set smarttab
+set shiftwidth=2
+set softtabstop=2
 
 
 " How many columns per line.
@@ -96,17 +96,16 @@ call plug#begin('~/.vim/plugged')
 
 " TeX and LaTeX
 Plug 'lervag/vimtex'
+let g:livepreview_previewer = 'zathura'
+let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
 let g:tex_flavor='latex'
-let g:vimtex_view_method='zathura'
-let g:vimtex_quickfix_mode=0
-"set conceallevel=1
-"let g:tex_conceal='abdmg'
 
 " A Vim Plugin for Lively Previewing LaTeX PDF Output
-"Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
-"let g:livepreview_previewer = 'evince'
-"let g:livepreview_engine = 'lualatex'
-"let g:livepreview_texinputs = '~/texlive//:~/.texlive//'
+Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
+let g:livepreview_previewer = 'zathura'
+let g:livepreview_engine = 'lualatex'
+let g:livepreview_use_biber = 1
+let g:livepreview_cursorhold_recompile = 0
 
 " Track the engine.
 Plug 'SirVer/ultisnips'
@@ -127,10 +126,9 @@ let g:UltiSnipsEditSplit="vertical"
 Plug 'preservim/vim-markdown'
 let g:vim_markdown_folding_disabled = 1
 
-" Vim's colorscheme
-"Plug 'sainnhe/everforest'
+" Vim's colorscheme: some other cool color shemes are 'sainnhe/everforest'
+" and 'doums/darcula'. Other colorschmes here: https://vimcolorschemes.com/
 Plug 'sainnhe/gruvbox-material'
-"Plug 'doums/darcula'
 
 " Some airline for Vim
 Plug 'vim-airline/vim-airline'
