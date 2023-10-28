@@ -154,7 +154,7 @@ git-zero () {
 clean-git-repo () {
   #grep -vP '^\s*(#|$)' .gitignore | \
   #  xargs -I % find . -not -path './.git/*' -type f -name % -delete
-  grep -vP '^\s*(#|$)' .gitignore | xargs -I % sh -c 'rm -frv %'
+  grep -vP '^\s*(#|$)' .gitignore | xargs -I % sh -c 'rm -frv "%"'
 }
 
 # *******
