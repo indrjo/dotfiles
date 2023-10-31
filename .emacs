@@ -30,7 +30,7 @@
 ;; Make sure `use-package` is installed. It will be used to install missing
 ;; packages and configure them.
 (unless (package-installed-p 'use-package)
-   (package-install 'use-package))
+  (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
 
@@ -134,5 +134,8 @@
 (unless (file-exists-p custom-dir)
   (make-directory custom-dir))
 (add-to-list 'load-path custom-dir)
+
+(use-package powerline)
+(powerline-default-theme)
 
 ;; @@@
