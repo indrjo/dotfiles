@@ -18,6 +18,17 @@
 ;; Set up the visible bell
 (setq visible-bell t)
 
+;; Show line numbers
+(column-number-mode)
+(global-display-line-numbers-mode t)
+(dolist
+    (mode '(org-mode-hook
+            term-mode-hook
+            shell-mode-hook
+            treemacs-mode-hook
+            eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
 ;; The list of package archives.
 (require 'package)
 (setq package-archives
