@@ -2,6 +2,7 @@
 ;;
 ;; >>> https://github.com/daviwil/emacs-from-scratch
 ;; >>> https://www.youtube.com/watch?v=74zOY-vgkyw
+;; >>> https://emacsrocks.com/
 
 ;; Show the current column number too.
 (setq-default column-number-mode t)
@@ -48,6 +49,12 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; A directory to be used as a sandbox and not to mess the GNU Emacs up.
+(setq custom-dir "~/.emacs.d/custom/")
+(unless (file-exists-p custom-dir)
+  (make-directory custom-dir))
+(add-to-list 'load-path custom-dir)
+
 ;; Keep clean.
 (setq user-emacs-directory "~/.cache/emacs")
 (use-package no-littering)
@@ -89,6 +96,10 @@
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
+;;; LANGUAGES
+
+(use-package lsp-mode)
+
 ;; Haskell
 (use-package haskell-mode)
 
@@ -100,6 +111,7 @@
 ;;(use-package racket-mode)
 (use-package geiser-racket)
 (use-package geiser-guile)
+;; See: http://danmidwood.com/content/2014/11/21/animated-paredit.html
 (use-package paredit)
 (autoload 'enable-paredit-mode
   "paredit" "Turn on pseudo-structural editing of Lisp code." t)
@@ -132,32 +144,35 @@
   :bind (:map markdown-mode-map
               ("C-c C-e" . markdown-do)))
 
+(use-package focus)
+(add-hook 'markdown-mode-hook #'focus-mode)
+
 ;; Git
-(use-package magit)
+(use-package magit
+  :commands magit-status
+  :custom
+  (magit-display-buffer-function
+   #'magit-display-buffer-same-window-except-diff-v1))
 
 ;; The selected theme.
 (use-package darcula-theme
   :ensure t)
 (load-theme 'darcula t)
 
-;; Draw a vertical ruler on column 75.
+;; Draw a vertical ruler on column 75 for some languages.
 (use-package fill-column-indicator)
 (setq fci-rule-column 75)
-;; The vertical rule is only for the languages I indicate below...
-(add-hook 'haskell-mode-hook #'fci-mode)
-(add-hook 'scheme-mode-hook #'fci-mode)
-(add-hook 'emacs-lisp-mode-hook #'fci-mode)
-(add-hook 'sh-mode-hook #'fci-mode)
-(add-hook 'perl-mode-hook #'fci-mode)
-(add-hook 'python-mode-hook #'fci-mode)
+(mapc
+ (lambda (hook)
+   (add-hook hook #'fci-mode))
+ '(haskell-mode-hook
+   scheme-mode-hook
+   emacs-lisp-mode-hook
+   sh-mode-hook
+   perl-mode-hook
+   python-mode-hook))
 
-;; Spellcheck for all the programming languages
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
-
-;; A directory to be used as a sandbox and not to mess the GNU Emacs up.
-(setq custom-dir "~/.emacs.d/custom/")
-(unless (file-exists-p custom-dir)
-  (make-directory custom-dir))
-(add-to-list 'load-path custom-dir)
+;; Spellcheck
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 ;; @@@
