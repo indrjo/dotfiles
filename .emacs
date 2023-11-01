@@ -15,6 +15,9 @@
 (tooltip-mode -1)
 (set-fringe-mode 6)
 
+;; Set up the visible bell
+(setq visible-bell t)
+
 ;; The list of package archives.
 (require 'package)
 (setq package-archives
