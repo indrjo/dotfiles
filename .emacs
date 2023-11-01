@@ -77,6 +77,11 @@
   :config
   (ivy-mode 1))
 
+(use-package all-the-icons)
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 15)))
+
 ;; A library to make sure the environment variables inside GNU Emacs are
 ;; the same of your shell. For reference see:
 ;; >>> https://github.com/purcell/exec-path-from-shell#usage
@@ -154,8 +159,5 @@
 (unless (file-exists-p custom-dir)
   (make-directory custom-dir))
 (add-to-list 'load-path custom-dir)
-
-(use-package powerline)
-(powerline-default-theme)
 
 ;; @@@
