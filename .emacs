@@ -48,6 +48,12 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;; Keep clean.
+(setq user-emacs-directory "~/.cache/emacs")
+(use-package no-littering)
+(setq auto-save-file-name-transforms
+      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+
 ;; Show events or command history of certain buffers.
 (use-package command-log-mode)
 
