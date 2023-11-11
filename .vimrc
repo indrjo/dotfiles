@@ -41,7 +41,10 @@ set softtabstop=2
 
 
 " How many columns per line.
-set textwidth=75
+"set textwidth=75
+
+" Draw a vertical rule to curb the lenght of the lines. However, lines will
+" not be broken into two lines if such limit is exceeded.
 set colorcolumn=76
 
 " Do not save backup files.
