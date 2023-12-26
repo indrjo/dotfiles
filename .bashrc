@@ -14,7 +14,7 @@ alias ls='ls --color=auto'
 PS1='(\u@\h \w)\$ '
 
 # Do not include commands starting with a space to the history of commands.
-export HISTIGNORE='pwd: *:git status:git diff *'
+export HISTIGNORE=' *'
 
 # !!! Write on ~/.bash_aliases all your stuff !!!
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
