@@ -4,20 +4,14 @@
 ;; >>> https://www.youtube.com/watch?v=74zOY-vgkyw
 ;; >>> https://emacsrocks.com/
 
-;; Show the current column number too.
-(setq-default column-number-mode t)
-
-;; Insert spaces when you hit tab.
-(setq-default indent-tabs-mode nil)
-
 ;; Uncluttering my workspace a little bit...
 (setq inhibit-startup-message t)
 (tool-bar-mode -1)
 (tooltip-mode -1)
-(set-fringe-mode 6)
+(set-fringe-mode 0)
 
 ;; Set up the visible bell
-(setq visible-bell t)
+;;(setq visible-bell t)
 
 ;; Show line numbers
 (column-number-mode)
@@ -29,6 +23,16 @@
             treemacs-mode-hook
             eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+;; Show the current column number too.
+(setq-default column-number-mode t)
+
+;; Insert spaces when you hit tab.
+(setq-default tab-width 2)
+(setq-default indent-tabs-mode nil)
+
+;; Spellcheck for comments.
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 ;; The list of package archives.
 (require 'package)
@@ -55,7 +59,7 @@
   (make-directory custom-dir))
 (add-to-list 'load-path custom-dir)
 
-;; Keep clean.
+;; Help keeping ~/.config/emacs clean.
 (setq user-emacs-directory "~/.cache/emacs")
 (use-package no-littering)
 (setq auto-save-file-name-transforms
@@ -81,8 +85,22 @@
          :map ivy-reverse-i-search-map
          ("C-k" . ivy-previous-line)
 	 ("C-d" . ivy-reverse-i-search-kill))
-  :config
-  (ivy-mode 1))
+  :config (ivy-mode 1))
+
+;; The selected theme.
+(use-package darcula-theme
+  :ensure t)
+(load-theme 'darcula t)
+
+;; Draw a vertical ruler on column 75 for some languages.
+(use-package fill-column-indicator)
+(setq fci-rule-column 75)
+(mapc
+ (lambda (hook)
+   (add-hook hook #'fci-mode))
+ '(sh-mode-hook
+   perl-mode-hook
+   python-mode-hook))
 
 (use-package all-the-icons)
 (use-package doom-modeline
@@ -102,6 +120,11 @@
 
 ;; Haskell
 (use-package haskell-mode)
+(add-hook 'haskell-mode-hook #'fci-mode)
+(add-hook 'haskell-mode-hook #'haskell-decl-scan-mode)
+(add-hook 'haskell-mode-hook #'haskell-indent-mode)
+(add-hook 'haskell-mode-hook #'highlight-uses-mode)
+(add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 
 ;; Agda
 (load-file (let ((coding-system-for-read 'utf-8))
@@ -111,6 +134,8 @@
 ;;(use-package racket-mode)
 (use-package geiser-racket)
 (use-package geiser-guile)
+(add-hook 'scheme-mode-hook #'fci-mode)
+(add-hook 'emacs-lisp-mode-hook #'fci-mode)
 ;; See: http://danmidwood.com/content/2014/11/21/animated-paredit.html
 (use-package paredit)
 (autoload 'enable-paredit-mode
@@ -128,8 +153,9 @@
 ;; TeX
 (use-package tex
   :ensure auctex)
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
+(setq-default TeX-engine 'luatex)
+(setq-default TeX-auto-save t)
+(setq-default TeX-parse-self t)
 (setq-default TeX-master nil)
 
 (use-package latex-preview-pane)
@@ -145,7 +171,7 @@
               ("C-c C-e" . markdown-do)))
 
 (use-package focus)
-(add-hook 'markdown-mode-hook #'focus-mode)
+;(add-hook 'markdown-mode-hook #'focus-mode)
 
 ;; Git
 (use-package magit
@@ -154,25 +180,5 @@
   (magit-display-buffer-function
    #'magit-display-buffer-same-window-except-diff-v1))
 
-;; The selected theme.
-(use-package darcula-theme
-  :ensure t)
-(load-theme 'darcula t)
-
-;; Draw a vertical ruler on column 75 for some languages.
-(use-package fill-column-indicator)
-(setq fci-rule-column 75)
-(mapc
- (lambda (hook)
-   (add-hook hook #'fci-mode))
- '(haskell-mode-hook
-   scheme-mode-hook
-   emacs-lisp-mode-hook
-   sh-mode-hook
-   perl-mode-hook
-   python-mode-hook))
-
-;; Spellcheck
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-
 ;; @@@
+
