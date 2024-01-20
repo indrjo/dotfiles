@@ -39,14 +39,9 @@ update-arch-mirrors () {
 [ -d ~/.local/bin ] || mkdir -p ~/.local/bin
 (echo "$PATH" | grep -q ~/.local/bin) || export PATH=~/.local/bin:$PATH
 
-# Generate passwords. If no argument is given, the length is by default 12.
+# Generate ten passwords of a given length [default = 20].
 pw-gen () {
-  [ -z $1 ] && len=12 || len=$1
-  # Reminder: -c capital letters
-  #           -n numbers
-  #           -y special symbols
-  #           -s secure passwords
-  pwgen -cnys $len 1
+  echo; pwgen -cnys1 ${1:-20} 10; echo
 }
 
 # ***********
