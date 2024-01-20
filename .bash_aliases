@@ -145,8 +145,8 @@ git-zero () {
 # inside the same tree. Observe that you should run this command from the
 # base of your repository.
 clean-git-repo () {
-  grep -vP '^\s*(#|$)' .gitignore | \
-    xargs -I % find . -not -path './.git/*' -name '%' -delete
+  grep -vP '^\s*(#|$)' .gitignore \
+    | xargs -I % find . -path './.git' -prune -o -iname '%' -delete
 }
 
 # *******
