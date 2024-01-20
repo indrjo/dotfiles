@@ -131,16 +131,14 @@ alias smallest-yt='yt -S "+size,+br"'
 # * GIT *
 # *******
 
-# Just avoid the function below.
+# !!! Just avoid the function below. !!!
 git-zero () {
   git checkout --orphan temp-branch
   git add --all
-  now=$(date +"%H:%M | %d %b %Y")
+  now="$(date +"%H:%M, %d %b %Y")"
   git commit -am "reborn: $now"
   git branch -D main
   git branch -m main
-  wget -q --spider "https://github.com"
-  [ $? == 0 ] && git push -uf origin main
 }
 
 # Within a git repo read .gitignore and delete all the corresponding stuff
