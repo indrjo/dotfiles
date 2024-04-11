@@ -41,8 +41,11 @@ update-arch-mirrors () {
 
 # Generate ten passwords of a given length [default = 20].
 pw-gen () {
-  echo; pwgen -cnys1 ${1:-20} 10; echo
+  pwgen -cnys1 ${1:-20} 10
 }
+
+# Shred files.
+alias shred='shred -uvz'
 
 # ***********
 # * HASKELL *
@@ -73,6 +76,7 @@ alias ghcup='TMPDIR=~/.tmp ghcup'
 # **********
 
 alias py='python3'
+eval "$(register-python-argcomplete pipx)"
 
 # ********
 # * PERL *
@@ -111,8 +115,7 @@ export PATH=~/gems/bin:$PATH
 
 # Interrogate CTAN for packages containing a given file.
 tlmgr_search () {
-  tlmgr search --global --file "/$1" \
-    | perl -lne "/([^:]+):$/ && print \$1"
+  tlmgr search --global --file "/$1" | grep -P ':$' | tr -d ':'
 }
 
 # Install ALL the packages listed by `tlmgr_search`.
@@ -124,7 +127,7 @@ tlmgr_search_install () {
 # * DOWNLOAD VIDEOS *
 # *******************
 
-alias yt='yt-dlp -N 2 -o "%(title)s.%(ext)s"'
+alias yt='yt-dlp --restrict-filenames -o "%(title)s.%(ext)s"'
 alias smallest-yt='yt -S "+size,+br"'
 
 # *******
@@ -135,8 +138,8 @@ alias smallest-yt='yt -S "+size,+br"'
 git-zero () {
   git checkout --orphan temp-branch
   git add --all
-  now="$(date +"%H:%M, %d %b %Y")"
-  git commit -am "reborn: $now"
+  now=$(date +"%H:%M | %d %b %Y")
+  git commit -am "reborn $now"
   git branch -D main
   git branch -m main
 }
