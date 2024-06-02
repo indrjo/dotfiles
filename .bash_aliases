@@ -39,6 +39,10 @@ update-arch-mirrors () {
 [ -d ~/.local/bin ] || mkdir -p ~/.local/bin
 (echo "$PATH" | grep -q ~/.local/bin) || export PATH=~/.local/bin:$PATH
 
+# I put my executables here.
+[ -d ~/.bin ] || mkdir -p ~/.bin
+export PATH=~/.bin:$PATH
+
 # Generate ten passwords of a given length [default = 20].
 pw-gen () {
   pwgen -cnys1 ${1:-20} 10
@@ -76,11 +80,21 @@ alias ghcup='TMPDIR=~/.tmp ghcup'
 # **********
 
 alias py='python3'
+
+if [ -f ~/.local/venv/bin/activate ]; then
+  # do not modify the PS1
+  export VIRTUAL_ENV_DISABLE_PROMPT=1
+  source ~/.local/venv/bin/activate
+fi
+
+# Pipx auto-completion.
 eval "$(register-python-argcomplete pipx)"
 
 # ********
 # * PERL *
 # ********
+
+alias pl='perl'
 
 # Your local Perl.
 PATH="$HOME/perl5/bin${PATH:+:${PATH}}"
@@ -93,8 +107,6 @@ PERL_MB_OPT="--install_base \"$HOME/perl5\""
 export PERL_MB_OPT
 PERL_MM_OPT="INSTALL_BASE=$HOME/perl5"
 export PERL_MM_OPT
-
-alias pl='perl'
 
 # ********
 # * RUBY *
