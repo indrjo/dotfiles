@@ -1,4 +1,4 @@
-;;; .emacs --- GNU Emacs configuration file -*- lexical-binding: t; -*-
+;;; init.el --- GNU Emacs configuration file -*- lexical-binding: t; -*-
 ;;;
 ;;; Commentary:
 ;;;
@@ -41,33 +41,7 @@
 ;;; * General configuration *
 ;;; *************************
 
-;; Start with a blank screen. (Although, booting up with the GNU Emacs
-;; welcome screen isn't bad at all...)
-(setq inhibit-startup-message t)
-
-;; Disable the menu bar. If disabled, press `Fn+F10` to make it pop up.
-(menu-bar-mode -1)
-
-;; Disable toolbar.
-(tool-bar-mode -1)
-
-;; Disable scroll bar.
-(scroll-bar-mode -1)
-
-;; Start scrolling if point is trying to go off screen vertically.
-(setq scroll-margin 0)
-;; Do not recenter point if you move off screen.
-(setq scroll-conservatively 101)
-;; Remember position if when scrolling point risks to fall off screen.
-(setq scroll-preserve-screen-position t)
-(setq auto-window-vscroll nil)
-
-;; Disable tooltips.
-(tooltip-mode -1)
-
-;; On the mode-line will appear `(x, y)` indicating the position of
-;; the cursor on the current window.
-(column-number-mode 1)
+;; Some configuration is moved to `early-init.el`.
 
 ;; Split window and immediately "C-x o". This is not the dafault, I
 ;; don't know why...
@@ -84,38 +58,17 @@
 (global-set-key (kbd "C-x 2") 'split-horizontally-and-C-x-o)
 (global-set-key (kbd "C-x 3") 'split-vertically-and-C-x-o)
 
-;; Disable auto-saving for every file you are visiting.
-(setq auto-save-default nil)
-;; Do not make backup files after the first save. Alternatively, see the
-;; commented piece below.
-(setq make-backup-files nil)
-
-;; Make backup files in one precise directory. In any case, keep the
-;; litter away from the working place.
-;; (setq backup-dir (expand-file-name "~/.emacs.d/backup"))
-;; (unless (file-exists-p backup-dir)
-;;   (make-directory backup-dir t))
-;; (setq backup-directory-alist
-;;       `(("." . ,backup-dir)))
-
 ;; Needed for `shell-command-to-string` below. For reference see:
 ;; https://github.com/purcell/exec-path-from-shell
 (use-package exec-path-from-shell)
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
-;; Fonts
-(setq main-font "Cascadia Mono")
-(when (member main-font (font-family-list))
-  (set-face-attribute 'default nil :family main-font))
-
 ;; The selected theme.
 (use-package darcula-theme
   :config
   (load-theme 'darcula t))
 
-;; (use-package all-the-icons
-;;   :if (display-graphic-p))
 
 
 ;;; *************************
@@ -172,7 +125,8 @@
 
 ;; Check syntax
 (use-package flycheck
-  :config (global-flycheck-mode 1))
+  :config
+  (global-flycheck-mode 1))
 
 ;; Completions
 (use-package company
@@ -181,12 +135,13 @@
 
 ;; Snippets
 (use-package yasnippet
+  :init
+  (yas-global-mode 1)
   :config
   ;; Add the path of some personal snippets. My snippets will override
   ;; the others.
   (let ((my-snippet-dir (expand-file-name  "~/snippets/emacs/")))
-    (add-to-list 'yas-snippet-dirs my-snippet-dir))
-  (yas-global-mode 1))
+    (add-to-list 'yas-snippet-dirs my-snippet-dir)))
 
 ;; A good collection of snippets for many languages, good to have.
 (use-package yasnippet-snippets)
@@ -219,15 +174,21 @@
 
 (use-package scribble-mode)
 
+;; z3-prover
+(use-package z3-mode)
+
+;; S-expressions
 (use-package paren-face
   :hook ((emacs-lisp-mode . paren-face-mode)
 	 (racket-mode . paren-face-mode)
-	 (racket-repl-mode . paren-face-mode)))
+	 (racket-repl-mode . paren-face-mode)
+         (z3-mode . paren-face-mode)))
 
 ;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
 (use-package paredit
   :hook ((emacs-lisp-mode . paredit-mode)
-	 (racket-mode . paredit-mode)))
+	 (racket-mode . paredit-mode)
+         (z3-mode . paredit-mode)))
 
 ;; Python
 (use-package anaconda-mode
@@ -258,6 +219,8 @@
             TeX-source-correlate-mode
             ;; Line numbers on the left side
             display-line-numbers-mode
+            ;; Turn on abbrevs
+            abbrev-mode
 	    (lambda ()
               ;; (add-hook 'find-file-hook 'TeX-fold-buffer t)
               ;; (setq TeX-fold-auto t)
@@ -289,10 +252,7 @@
               (add-to-list 'LaTeX-verbatim-macros-with-delims "lstinline"))))
   (add-hook 'LaTeX-mode-hook mode))
 
-
-
 ;; Org mode
-
 (use-package olivetti)
 (use-package cdlatex)
 
@@ -301,6 +261,7 @@
   (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
 
 (use-package org
+  :ensure nil
   :hook ((org-mode . visual-line-mode)
          (org-mode . org-indent-mode)
 	 (org-mode . turn-on-org-cdlatex)
@@ -351,6 +312,14 @@
      ("showstringspaces" "false")
      ("frame"            "leftline"))))
 
+(use-package toc-org
+  :commands toc-org-enable
+  :hook (org-mode . toc-org-mode))
+
+;; (use-package org-superstar
+;;   :after org
+;;   :hook (org-mode . org-superstar-mode))
+
 (use-package org-modern
   :hook (org-mode . org-modern-mode))
 
@@ -360,5 +329,23 @@
   :custom
   (markdown-command "pandoc -f markdown -t html --standalone"))
 
-;;; .emacs ends here
+;; Personal finances
+
+;; Go at the end of a file.
+(defun bottom-line ()
+  "Opens a file with the pointer at the bottom line."
+  (interactive)
+  (end-of-buffer))
+
+(use-package ledger-mode
+  :hook (ledger-mode . bottom-line)
+  :custom
+  ((ledger-binary-path "hledger")
+   (ledger-mode-should-check-version nil)
+   (ledger-report-auto-width nil)
+   (ledger-report-links-in-register nil)
+   (ledger-report-native-highlighting-arguments '("--color=always")))
+  :mode ("\\.hledger\\'" "\\.journal\\'"))
+
+;;; init.el ends here
 
