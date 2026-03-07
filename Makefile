@@ -1,6 +1,6 @@
 #PHONY: all emacs vim
 
-all: emacs vim
+all: emacs vim snippets
 
 emacs:
 	@mkdir -p ~/.emacs.d/ 
@@ -13,3 +13,7 @@ vim:
 	@curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
   		https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	@vim +PlugInstall +q +q
+
+snippets:
+	@cd ~
+	@git clone 'https://github.com/indrjo/snippets'
