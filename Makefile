@@ -15,5 +15,4 @@ vim:
 	@vim +PlugInstall +q +q
 
 snippets:
-	@cd ~
-	@git clone 'https://github.com/indrjo/snippets'
+	@git clone https://github.com/indrjo/snippets ~/snippets
