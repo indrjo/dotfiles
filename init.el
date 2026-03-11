@@ -135,13 +135,12 @@
 
 ;; Snippets
 (use-package yasnippet
-  :init
-  (yas-global-mode 1)
   :config
   ;; Add the path of some personal snippets. My snippets will override
   ;; the others.
   (let ((my-snippet-dir (expand-file-name  "~/snippets/emacs/")))
-    (add-to-list 'yas-snippet-dirs my-snippet-dir)))
+    (add-to-list 'yas-snippet-dirs my-snippet-dir))
+  (yas-reload-all))
 
 ;; A good collection of snippets for many languages, good to have.
 (use-package yasnippet-snippets)
@@ -221,6 +220,8 @@
             display-line-numbers-mode
             ;; Turn on abbrevs
             abbrev-mode
+            ;; Turn on yasnippet
+            yas-minor-mode
 	    (lambda ()
               ;; (add-hook 'find-file-hook 'TeX-fold-buffer t)
               ;; (setq TeX-fold-auto t)
