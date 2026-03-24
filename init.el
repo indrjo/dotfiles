@@ -142,6 +142,45 @@
     (add-to-list 'yas-snippet-dirs my-snippet-dir))
   (yas-reload-all))
 
+;; Abbrevs (work in progress...)
+
+(defun begin-end (env)
+  "Print begin-end environments."
+  (format "\\begin{%s}\n @\n\\end{%s}" env env))
+
+(defun go-to-@ ()
+  "Go to the point of the last @ and delete it. Used for abbrevs."
+  (lambda ()
+    (search-backward "@")
+    (delete-char 1)))
+
+(defun abbrev-begin-end (abb env)
+  "Entry for abbrev-table's: begin-end environments."
+  `(,abb ,(begin-end env) ,(go-to-@)))
+
+(use-package abbrev
+  :ensure nil
+  :custom
+  (save-abbrevs nil)
+  :config
+  (define-abbrev-table 'LaTeX-mode-abbrev-table
+    `(;; common expressions
+      ("abcat" "Abelian category")
+      ("abcats" "Abelian categories")
+      ;; arrows
+      ("ra" "\\to")
+      ;; envs
+      ,(abbrev-begin-end "dfn" "definition")
+      ,(abbrev-begin-end "prp" "proposition")
+      ,(abbrev-begin-end "lmm" "lemma")
+      ,(abbrev-begin-end "crl" "corollary")
+      ,(abbrev-begin-end "rmk" "remark")
+      ,(abbrev-begin-end "rcl" "recall")
+      ,(abbrev-begin-end "exm" "example")
+      ,(abbrev-begin-end "exr" "exercise")
+      ;; other?
+      )))
+
 ;; A good collection of snippets for many languages, good to have.
 (use-package yasnippet-snippets)
 
